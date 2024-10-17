@@ -8,7 +8,7 @@ urls.py links the web page and views.py
 
 use django admin at http://127.0.0.1:8000/admin/ to add, delete, edit the internal data
 
-# key takeaways
+# Key takeaways
 
 python manage.py shell is really useful to try out the models and how the syntax works
 
