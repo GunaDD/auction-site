@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Categories</h2>
+
+    {% if not name %}
+        <div class="list-group">
+            {% for cat in categories %}
+                <a href="{% url 'category' cat.name %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    {{ cat.name }}
+                    <span class="badge bg-secondary rounded-pill">Browse Listings</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h4 class="mb-4 text-center">{{ name }} listings</h4>
+        <div class="list-group">
+            {% for listing in listings %}
+                <a href="{% url 'listing' listing.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    {{ listing.title }}
+                    <span class="badge bg-primary rounded-pill">View Listing</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

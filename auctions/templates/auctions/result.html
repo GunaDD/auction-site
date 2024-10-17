@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-5 text-center">
+    {% if type %}
+        <h3 class="text-success">You have successfully added the bid.</h3>
+    {% else %}
+        <h3 class="text-danger">You need to place a bid with a higher amount.</h3>
+    {% endif %}
+    <a href="{% url 'index' %}" class="btn btn-primary mt-3">Back to Listings</a>
+</div>
+
+{% endblock %}

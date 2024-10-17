@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Active Listings</h2>
+    {% if listings %}
+        <div class="list-group">
+            {% for listing in listings %}
+                <a href="{% url 'listing' listing.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    {{ listing.title }}
+                    <span class="badge bg-primary rounded-pill">View Listing</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No active listings available at the moment.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="text-center mb-4">
+                <h1 class="display-4">{{ listing.title }}</h1>
+                <h4 class="text-muted">Posted by: <strong>{{ listing.poster }}</strong></h4>
+            </div>
+            <div class="container text-center">
+                {% if in_watchlist %}
+                    <form action="{% url 'watchlist_remove' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Remove from watchlist</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'watchlist_add' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Add to watchlist</button>
+                    </form>
+                {% endif %}
+            </div>
+            <div class="text-center mt-4">
+                <img src="{{ listing.picture }}" alt="Item Image" class="img-fluid rounded shadow-sm" style="max-width: 100%; height: auto; object-fit: cover;">
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% if winner == None %}
+                {% if listing.poster == request.user and cur_val != None %}
+                    <form action="{% url 'close' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary mb-4" type="submit">Close Bid</button>
+                    </form>
+                {% endif %}
+                <div class="bg-light p-4 rounded mb-4 shadow-sm">
+                    {% if cur_val == None %}
+                        <h4 class="text-primary">Starting Bid: <strong>{{ listing.bid }} CAD</strong></h4>
+                    {% else %}
+                        <h4 class="text-primary">Current Highest Bid: <strong>{{ cur_val }} CAD</strong></h4>
+                    {% endif %}
+                </div>
+                <div class="bg-white p-4 rounded mb-4 shadow-sm" style="min-height: 150px;">
+                    <h5 class="text-secondary">Description:</h5>
+                    <p>{{ listing.description }}</p>
+                </div>
+                <div class="bg-light p-4 rounded shadow-sm mb-4">
+                    <h5 class="text-secondary">Place Your Bid:</h5>
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'bid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="number" step="any" name="price" class="form-control" placeholder="Enter your bid amount" required>
+                            <button class="btn btn-primary" type="submit">Place Bid!</button>
+                        </div>
+                    </form>
+                    <small class="text-muted">* Bids must be greater than the current highest bid.</small>
+                    {% else %}
+                        <p>Please sign in to bid</p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>{{ listing.title }} was bought by {{ winner }} for {{ cur_val }} CAD. Congratulations!</p>
+                <p>The listing is now closed.</p>
+            {% endif %}
+            <div class="bg-white p-4 rounded shadow-sm mb-4">
+                <h5 class="text-secondary">Leave a Comment:</h5>
+                {% if user.is_authenticated %}
+                <form action="{% url 'comment' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <textarea name="comment" class="form-control" rows="4" placeholder="Your comment here" required></textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Post Comment!</button>
+                </form>
+                {% else %}
+                    <p>Please sign in to comment</p>
+                {% endif %}
+            </div>
+            <div class="bg-light p-4 rounded shadow-sm">
+                <h5 class="text-secondary">Comments:</h5>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="mb-3">
+                            <strong>{{ comment.commenter }}</strong>
+                            <p>{{ comment.comment }}</p>
+                            <small class="text-muted">{{ comment.timestamp|date:"F j, Y, g:i a" }}</small>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p>No comments yet. Be the first to comment!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
