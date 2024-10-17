@@ -1,4 +1,4 @@
-# Auction site built with Django
+# Auction site built with Django + Bootstrap
 
 models.py contains model that stores the different kinds of data
 
